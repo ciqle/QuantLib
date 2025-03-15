@@ -47,14 +47,21 @@ namespace QuantLib {
         \test the correctness of the returned results is tested
               against a list of known holidays.
     */
+    // TARGET日历类
+    // TARGET代表"Trans-European Automated Real-time Gross settlement Express Transfer system"
+    // 即"泛欧自动实时总额结算快速转账系统"，是欧洲中央银行使用的支付系统
     class TARGET : public Calendar {
       private:
+        // 内部实现类，继承自Calendar::WesternImpl
         class Impl final : public Calendar::WesternImpl {
           public:
+            // 返回日历名称
             std::string name() const override { return "TARGET"; }
+            // 判断给定日期是否为工作日
             bool isBusinessDay(const Date&) const override;
         };
       public:
+        // TARGET日历构造函数
         TARGET();
     };
 
