@@ -24,6 +24,7 @@
 
 namespace QuantLib {
 
+    // 构造函数：初始化零通胀现金流
     ZeroInflationCashFlow::ZeroInflationCashFlow(Real notional,
                                                  const ext::shared_ptr<ZeroInflationIndex>& index,
                                                  CPI::InterpolationType observationInterpolation,
@@ -38,14 +39,19 @@ namespace QuantLib {
       zeroInflationIndex_(index), interpolation_(observationInterpolation),
       startDate_(startDate), endDate_(endDate), observationLag_(observationLag) {}
 
+    // 获取基准固定值：根据通胀指数在基准日期的值
     Real ZeroInflationCashFlow::baseFixing() const {
+        // 使用零通胀指数的特殊方法，考虑观察滞后和插值方式
         return CPI::laggedFixing(zeroInflationIndex_, startDate_, observationLag_, interpolation_);
     }
 
+    // 获取指数固定值：根据通胀指数在结束日期的值
     Real ZeroInflationCashFlow::indexFixing() const {
+        // 使用零通胀指数的特殊方法，考虑观察滞后和插值方式
         return CPI::laggedFixing(zeroInflationIndex_, endDate_, observationLag_, interpolation_);
     }
 
+    // 访问者模式实现
     void ZeroInflationCashFlow::accept(AcyclicVisitor& v) {
         auto* v1 = dynamic_cast<Visitor<ZeroInflationCashFlow>*>(&v);
         if (v1 != nullptr)
