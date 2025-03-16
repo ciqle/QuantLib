@@ -31,4 +31,13 @@ namespace QuantLib {
         QL_REQUIRE(amount_!=Null<Real>(), "null amount SimpleCashFlow");
     }
 
+    // 注：详细的accept方法实现已经在头文件中以内联方式定义
+    // void SimpleCashFlow::accept(AcyclicVisitor& v) {
+    //    auto* v1 = dynamic_cast<Visitor<SimpleCashFlow>*>(&v);
+    //    if (v1 != nullptr)
+    //        v1->visit(*this);
+    //    else
+    //        CashFlow::accept(v);
+    // }
+
 }

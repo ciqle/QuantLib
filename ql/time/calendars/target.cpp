@@ -21,35 +21,45 @@
 
 namespace QuantLib {
 
+    // TARGET日历构造函数实现
     TARGET::TARGET() {
-        // all calendar instances share the same implementation instance
+        // 所有日历实例共享相同的实现实例
+        // 使用静态共享指针创建TARGET::Impl的实例
         static ext::shared_ptr<Calendar::Impl> impl(new TARGET::Impl);
+        // 将基类的实现指针指向这个实例
         impl_ = impl;
     }
 
+    // TARGET::Impl类的isBusinessDay方法实现，用于判断一个日期是否为工作日
     bool TARGET::Impl::isBusinessDay(const Date& date) const {
+        // 获取日期的星期几
         Weekday w = date.weekday();
+        // 获取日期的天、月、年以及一年中的第几天
         Day d = date.dayOfMonth(), dd = date.dayOfYear();
         Month m = date.month();
         Year y = date.year();
+        // 计算该年复活节星期一的日期
         Day em = easterMonday(y);
+        // 判断是否为非工作日：
+        // 如果是周末，或者是以下任何一个节假日：
         if (isWeekend(w)
-            // New Year's Day
+            // 新年（1月1日）
             || (d == 1  && m == January)
-            // Good Friday
+            // 耶稣受难日（复活节前的星期五，2000年及以后）
             || (dd == em-3 && y >= 2000)
-            // Easter Monday
+            // 复活节星期一（2000年及以后）
             || (dd == em && y >= 2000)
-            // Labour Day
+            // 劳动节（5月1日，2000年及以后）
             || (d == 1  && m == May && y >= 2000)
-            // Christmas
+            // 圣诞节（12月25日）
             || (d == 25 && m == December)
-            // Day of Goodwill
+            // 节礼日（12月26日，2000年及以后）
             || (d == 26 && m == December && y >= 2000)
-            // December 31st, 1998, 1999, and 2001 only
+            // 12月31日（仅限1998年、1999年和2001年）
             || (d == 31 && m == December &&
                 (y == 1998 || y == 1999 || y == 2001)))
             return false; // NOLINT(readability-simplify-boolean-expr)
+        // 如果不是以上任何一种情况，则为工作日
         return true;
     }
 
